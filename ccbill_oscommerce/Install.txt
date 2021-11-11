@@ -1,0 +1,261 @@
+
+=== Installation ===
+
+The CCBill OSCommerce billing module enables easy integration of your CCBill account within the OSCommerce e-commerce platform.  Installation involves the following steps:
+ -Installing the CCBill payment module for OSCommerce
+ -Configuring your CCBill account for use with OSCommerce
+ -Configuring the module with your CCBill account information
+
+The CCBill OSCommerce module is installed by uploading the plugin code downloaded from the CCBill website into the corresponding folders in your OSCommerce installation.  There are five files which must be copied:
+
+ /ext/modules/payment/ccbill/ccbill_post_handler.php
+ /ext/modules/payment/ccbill/ccbill_process_success.php
+
+ /includes/languages/english/modules/payment/ccbill.php
+
+ /includes/modules/payment/ccbill.php
+
+ /ccbill_post_handler.php
+
+*Important*
+Before installation, if you have the old version of the CCBill payment gateway, remove it from the OSCommerce admin, then upload the new code and re-install the module.
+
+
+=== Installing the Module ===
+
+In the left menu of your OSCommerce admin interface, select "Modules" and then "Payment."  Click "Install Module" in the upper-right.  Select "CCBill Payments" from the list and click "Install Module."  Once the module has been installed successfully, you will be redirected to the Modules -> Payment section of the admin interface, with the new CCBill module selected.
+
+
+
+=== Configuring Your CCBill Account ===
+
+Before using the plugin, it’s necessary to configure a few things in your CCBill account.  Please ensure the CCBill settings are correct, or the payment module will not work.
+
+
+=== Enabling Dynamic Pricing ===
+
+Please work with your CCBill support representative to activate "Dynamic Pricing" for your account.  You can verify that dynamic pricing is active by selecting "Feature Summary" under the "Account Info" tab of your CCBill admin menu.  Dynamic pricing status appears at the bottom of the "Billing Tools" section.
+
+
+=== Creating a Salt / Encryption Key ===
+
+A "salt" is a string of random data used to make your encryption more secure.  You must contact CCBill Support to generate your salt.  Once set, it will be visible under the "Advanced" section of the "Sub Account Admin" menu.  It will appear in the "Encryption Key" field of the "Upgrade Security Setup Information" section.
+
+
+=== Disabling User Management ===
+
+Since this account will be used for dynamic pricing transactions rather than managing user subscription, user management must be disabled.
+
+In your CCBill admin interface, navigate to "Sub Account Admin" and select "User Management" from the left menu.  Select "Turn off User Management" in the top section.  
+
+Under "Username Settings," select "Do Not Collect Usernames and Passwords."
+
+
+=== Creating a New Billing Form ===
+
+The billing form is the CCBill form that will be displayed to customers after they choose to check out using CCBill.  The billing form accepts customer payment information, processes the payment, and returns the customer to your OSCommerce store where a confirmation message is displayed.
+
+*Important*
+
+CCBill provides two types of billing forms.  FlexForms is our newest (and recommended) system, but standard forms are still supported.  Please choose a form type and proceed according to the section for Option 1 or Option 2, according to your selection.
+
+=== Option 1: Creating a New Billing Form - FlexForms ===
+    *Note: Skip this section if using standard forms*
+
+To create a FlexForm form for use with OS Commerce, first ensure "all" is selected in the top Client Account dropdown.   FlexForms are not specific to sub accounts, and cannot be managed when a sub account is selected.
+
+Navigate to the FlexSystems tab in the top menu bar and select "FlexForms Payment Links."  All existing forms will be displayed in a table.
+
+Click the "Add New" button in the upper-left to create a new form.
+
+= Payment Flow Name =
+At the top, enter a name for the new payment flow (this will be different than the form name, as a single form can be used in multiple flows).  
+
+= Form Name =
+Under Form Name, enter a name for the form.
+
+= Dynamic Pricing =
+Under Pricing, check the box to enable dynamic pricing.
+
+= Layout =
+Select your desired layout, and save the form.
+
+= Edit the Flow =
+Click the arrow button to the left of your new flow to view the details.
+
+Under the green Approve arrow, click the square to modify the action.
+
+= Approval URL =
+In the left menu, select "A URL."
+
+Select "Add A New URL" and enter the base URL for your OS Commerce store, followed by: 
+
+/ext/modules/payment/ccbill/ccbill_process_success.php
+
+For example, if your OS Commerce store is located at http://www.test.com, the Approval URL would be:
+
+http://www.test.com/ext/modules/payment/ccbill/ccbill_process_success.php
+
+= URL Name =
+Enter a name for this URL.  This should be a descriptive name such as "OS Commerce Checkout Success."
+
+= Redirect Time =
+Select a redirect time of 1 second using the slider at the bottom and save the form.
+
+= Promote to Live =
+Click the "Promote to Live" button to enable your new form to accept payments.
+
+= Note the Flex ID =
+Make note of the Flex ID: this value will be entered into the form name when completing the configuration in OS Commerce.
+
+=== WebHooks (FlexForms only) ===
+    *Note: Skip this section if using standard forms*
+
+As a final step for configuring a FlexForm, select the sub account to be used with OS Commerce from the top Client Account dropdown.  
+
+Navigate to the Account Info tab in the top menu bar and select "Sub Account Admin."
+
+Select "Webhooks" from the left menu, then select "Add" to add a new webhook.
+
+= Webhook Succes URL =
+Under Webhook URL, enter the base URL for your store, followed by: 
+
+/ext/modules/payment/ccbill/ccbill_post_handler.php?Action=Approval_Post
+
+For example, if your store is located at http://www.test.com, the Approval URL would be:
+
+http://www.test.com/ext/modules/payment/ccbill/ccbill_post_handler.php?Action=Approval_Post
+
+Select "NewSaleSuccess," then click the Update button to save the Webhook information.
+
+= Webhook Failure URL =
+Under Webhook URL, enter the base URL for your store, followed by: 
+
+/ext/modules/payment/ccbill/ccbill_post_handler.php?Action=Denial_Post
+
+For example, if your store is located at http://www.test.com, the Approval URL would be:
+
+http://www.test.com/ext/modules/payment/ccbill/ccbill_post_handler.php?Action=Denial_Post
+
+Select "NewSaleFailure," then click the Update button to save the Webhook information.
+
+= Skip to "Configuration - OS Commerce" =
+Your CCBill FlexForms configuration is now complete.  Please skip directly to the section titled "Configuration - OS Commerce."
+
+
+=== Option 2: Creating a New Billing Form - Standard Forms ===
+    *Note: Skip this section if using FlexForms*
+
+The billing form is the CCBill form that will be displayed to customers after they choose to check out using CCBill.  The billing form accepts customer payment information, processes the payment, and returns the customer to your OSCommerce store where a confirmation message is displayed.
+
+To create a billing form for use with OSCommerce, navigate to the "Form Admin" section of your CCBill admin interface.  All existing forms will be displayed in a table.
+Click "Create New Form" in the left menu to create your new form.
+Select the appropriate option under "Billing Type."  (In most cases, this will be "Credit Card.")
+
+Select "Standard" under "Form Type" unless you intend to customize your form.
+
+Select the desired layout, and click "Submit" at the bottom of the page.
+
+Your new form has been created, and is visible in the table under "View All Forms."  In this example, our new form is named "201cc."  Be sure to note the name of your new form, as it will be required in the OSCommerce configuration section.
+
+
+=== Configuring the New Billing Form ===
+
+Click the title of the newly-created form to edit it.  In the left menu, click "Basic."
+
+Under "Basic," select an Approval Redirect Time of 3 seconds, and a Denial Redirect Time of "None."
+
+
+=== Configuring Your CCBill Account ===
+
+In your CCBill admin interface, navigate to "Sub Account Admin" and select "Basic" from the left menu. 
+ 
+= Site Name =
+
+Enter the URL of your OSCommerce store under "Site Name"
+
+= Approval URL =
+
+Under Approval URL, enter the base URL for your OSCommerce store, followed by: 
+
+/ext/modules/payment/ccbill/ccbill_process_success.php
+
+For example, if your OSCommerce store is located at http://www.test.com, the Approval URL would be:
+
+http://www.test.com/ext/modules/payment/ccbill/ccbill_process_success.php
+
+= Denial URL =
+
+Under Denial URL, enter the base URL for your OSCommerce store, followed by: 
+
+/checkout_payment.php
+
+For example, if your OSCommerce store is located at http://www.test.com, the Denial URL would be:
+
+http://www.test.com/checkout_payment.php
+
+= Redirect Time =
+
+Select an approval redirect time of 3 seconds, and a denial redirect time of "None."
+
+
+= Background POST - Approval =
+
+Under Advanced form settings, Background POST Denial URL, enter the base URL for your OSCommerce store, followed by: 
+
+/ext/modules/payment/ccbill/ccbill_post_handler.php?Action=Approval_Post
+
+= Background POST - Denial =
+
+Under Advanced form settings, Background POST Denial URL, enter the base URL for your OSCommerce store, followed by: 
+
+/ext/modules/payment/ccbill/ccbill_post_handler.php?Action=Denial_Post
+
+
+=== Confirmation ===
+Your CCBill account is now configured. In your CCBill admin interface, navigate to "Sub Account Admin" and ensure the information displayed is correct.
+
+
+=== General Options ===
+
+In the left menu of your OSCommerce admin interface, select "Modules" and then "Payment."  Then, select "Pay by Credit Card with CCBIll."  The options display on the right.
+
+=== CCBill Options ===
+
+= Enable CCBill =
+Check the top box to enable payments with CCBIll standard.
+
+= Client Account Number =
+Enter your CCBill client account number.
+
+= Client SubAccount Number =
+Enter your CCBill client sub-account number.
+
+= Form Name =
+Enter the name of the form created during CCBill account configuration.
+
+= Is FlexForm =
+Select "Yes" if using FlexForms
+
+= Currency =
+Select the billing currency.  Ensure this selection matches the selection made in the "Localization -> Currencies" section of the OSCommerce administration menu.  CCBill currently supports the following currencies:
+
+ - US Dollar (USD) - Code: 840
+ - Euro (EUR) - Code: 978
+ - Australian Dollar (AUD) - Code: 036
+ - Canadian Dollar (CAD) - Code: 124
+ - Great Britain Pounds Sterling (GBP) - Code: 826
+ - Japanese Yen (JPY) - Code: 392
+
+= Salt =
+Enter your salt / encryption key obtained during CCBill configuration.
+Click "Update" at the bottom of the CCBill configuration section.  
+
+= Order Status =
+Select the status that will be given to orders once payment has been completed. 
+
+=== Confirmation ===
+You are now ready to process payments via CCBill!  Please conduct a few test transactions (using test data provided by CCBill) to ensure proper operation before enabling live billing mode in your CCBill account.
+
+
+
